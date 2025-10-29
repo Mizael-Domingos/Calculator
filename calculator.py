@@ -126,3 +126,9 @@ def limit_calc(expression, variable):
             print("Invalid direction")
 
     print("Limit result: ", result)
+
+    def converter_calculator():
+        unit = input("Select a type: 1- Distance, 2- pressure\n")
+
+        if unit == "1":
+            distance = input("Select the first unit: 1- Meters, 2- Feet, 3- Miles\n")
