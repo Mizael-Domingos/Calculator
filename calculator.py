@@ -128,7 +128,60 @@ def limit_calc(expression, variable):
     print("Limit result: ", result)
 
     def converter_calculator():
-        unit = input("Select a type: 1- Distance, 2- pressure\n")
+        while True:
+            unit = input("Select a type: 1- Distance, 2- pressure\n")
 
-        if unit == "1":
-            distance = input("Select the first unit: 1- Meters, 2- Feet, 3- Miles\n")
+            if unit == "1":
+                distance_calc()
+            elif unit == "2":
+                pressure_calc()
+            else:
+                print("Invalid answer!")
+           
+
+def distance_calc():
+    while True:
+        distance1 = input("Select the first unit: 1- Meters, 2- Feet, 3- Miles\n")
+            
+        if distance1 == "1":
+            meters = float(input("Select the distance in meters:\n"))
+            distance2 = input("Select the second unit: 1- Feet, 2- Miles")
+            if distance2 == "1":
+                result = meters * 3.28084
+            elif distance2 == "2":
+                result = meters * 0.000621371
+            else:
+                print("Invalid answer!")
+            break
+        
+        elif distance1 == "2":
+            feet = float(input("Select the distance in feet:\n"))
+            distance2 = input("Select the second unit: 1- Meter, 2- Miles")
+            if distance2 == "1":
+                result = feet * 0.3048
+            elif distance2 == "2":
+                result = feet * 0.000189394
+            else:
+                print("Invalid answer!")
+            break
+        
+        elif distance1 == "3":
+            miles = float(input("Select the distance in miles:\n"))
+            distance2 = input("Select the second unit: 1- Meter, 2- Feet")
+            if distance2 == "1":
+                result = miles * 1609.34
+            elif distance2 == "2":
+                result = miles * 5280
+            else:
+                print("Invalid answer!")
+            break
+        
+        else:
+            print("Invalid answer!")
+            break
+        
+    print("Distance: ", result)
+    
+    
+#def pressure_calc():
+            
