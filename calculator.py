@@ -1,51 +1,65 @@
 from sympy import symbols, sympify, diff, integrate, limit  # type: ignore
 
 
-def arithmetic_calculator(num_1):
-    if num_1 == None:
-        print("Enter first number:")
-        num1 = input()
-    else:
-        num1 = num_1
+def invalid():
+    print("Invalid answer!\n")
 
-    print("Enter operation (+,-,*,/)")
-    operator = input()
-    print("Enter second number:")
-    num2 = input()
+
+def calculate(num1, num2, operator):
+    operations = {
+        "+": lambda a, b: a + b,
+        "-": lambda a, b: a - b,
+        "*": lambda a, b: a * b,
+        "/": lambda a, b: a / b if b != 0 else None,
+    }
+
+    if operator not in operations:
+        invalid()
+        return None
+
+    if operator == "/" and num2 == 0:
+        print("Error: Division by zero")
+        return None
+
+    return operations[operator](num1, num2)
+
+
+def get_number(prompt, default=None):
+    if default is None:
+        value = input(prompt)
+    else:
+        value = default
 
     try:
-        num1 = float(num1)
-        num2 = float(num2)
+        return float(value)
     except ValueError:
-        print("Invalid number entered.")
+        invalid()
+        return None
+
+
+def arithmetic_calculator(num_1):
+    num1 = get_number("Enter first number: ", num_1)
+    if num1 is None:
         return
 
-    if operator == "+":
-        result = float(num1) + float(num2)
-    elif operator == "-":
-        result = float(num1) - float(num2)
-    elif operator == "*":
-        result = float(num1) * float(num2)
-    elif operator == "/":
-        if num2 == 0:
-            print("Error: Division by zero")
-            return
-        else:
-            result = float(num1) / float(num2)
-    else:
-        print("Invalid operator")
+    operator = input("Enter operation (+,-,*,/): ").strip()
+    num2 = get_number("Enter second number: ")
+    if num2 is None:
+        return
 
-    print("Result: ", result)
+    result = calculate(num1, num2, operator)
+    if result is None:
+        return
 
     while True:
-        answer = input("Do you want to continue? S/N: ")
-        if answer.upper() == "S":
+        answer = input("Do you want to continue? S/N: ").strip().upper()
+        if answer == "S":
             arithmetic_calculator(result)
             break
-        elif answer.upper() == "N":
+        elif answer == "N":
             break
         else:
-            print("Invalid answer")
+            invalid()
 
 
 def calculus_calculator():
@@ -65,7 +79,7 @@ def calculus_calculator():
     elif calc_type == "3":
         limit_calc(expression, variable)
     else:
-        print("Invalid option")
+        invalid()
         calculus_calculator()
 
 
@@ -122,64 +136,81 @@ def limit_calc(expression, variable):
             result = limit(expr, x, point, dir="+")
             break
         else:
-            print("Invalid direction")
+            invalid()
 
     print("Limit result: ", result)
 
-    def converter_calculator():
-        while True:
-            unit = input("Select a type: 1- Distance, 2- pressure\n")
 
-            if unit == "1":
-                distance_calc()
-            elif unit == "2":
-                pressure_calc()
-            else:
-                print("Invalid answer!")
+def converter_calculator():
+    while True:
+        unit = input("Select a type: 1- Distance, 2- Pressure\n")
+
+        if unit == "1":
+            distance_calc()
+        elif unit == "2":
+            pressure_calc()
+        else:
+            invalid()
+
+
+distance_factors = {
+    "meters": 1.0,
+    "feet": 0.3048,
+    "miles": 1609.34,
+    "kilometers": 1000,
+    "inches": 0.0254,
+}
+
+
+def convert_distance(value, unit1, unit2):
+    value_in_meters = value * distance_factors[unit1]
+
+    result = value_in_meters / distance_factors[unit2]
+    return result
 
 
 def distance_calc():
-    while True:
-        distance1 = input("Select the first unit: 1- Meters, 2- Feet, 3- Miles\n")
+    print("Available units: meters, feet, miles, kilometers, inches")
 
-        if distance1 == "1":
-            meters = float(input("Select the distance in meters:\n"))
-            distance2 = input("Select the second unit: 1- Feet, 2- Miles")
-            if distance2 == "1":
-                result = meters * 3.28084
-            elif distance2 == "2":
-                result = meters * 0.000621371
-            else:
-                print("Invalid answer!")
-            break
+    unit1 = input("Enter the first unit: ").strip().lower()
+    unit2 = input("Enter the unit to convert to: ").strip().lower()
+    value = float(input(f"Enter the distance in {unit1}: "))
 
-        elif distance1 == "2":
-            feet = float(input("Select the distance in feet:\n"))
-            distance2 = input("Select the second unit: 1- Meter, 2- Miles")
-            if distance2 == "1":
-                result = feet * 0.3048
-            elif distance2 == "2":
-                result = feet * 0.000189394
-            else:
-                print("Invalid answer!")
-            break
+    if unit1 not in distance_factors or unit2 not in distance_factors:
+        invalid()
+        return
 
-        elif distance1 == "3":
-            miles = float(input("Select the distance in miles:\n"))
-            distance2 = input("Select the second unit: 1- Meter, 2- Feet")
-            if distance2 == "1":
-                result = miles * 1609.34
-            elif distance2 == "2":
-                result = miles * 5280
-            else:
-                print("Invalid answer!")
-            break
-
-        else:
-            print("Invalid answer!")
-            break
-
-    print("Distance: ", result)
+    result = convert_distance(value, unit1, unit2)
+    print(f"{value} {unit1} = {result} {unit2}")
 
 
-# def pressure_calc():
+pressure_factors = {
+    "pascal": 1,
+    "bar": 100000,
+    "kilopascal": 1000,
+    "atm": 101325,
+    "mmhg": 133.3224,
+    "psi": 6894.8,
+}
+
+
+def convert_pressure(value, unit1, unit2):
+    value_in_pascal = value * pressure_factors[unit1]
+
+    result = value_in_pascal / pressure_factors[unit2]
+    return result
+
+
+def pressure_calc():
+    print("Available units: pascal, bar, kilopascal, atm, mmHg, psi")
+
+    unit1 = input("Enter the first unit: ").strip().lower()
+    unit2 = input("Enter the unit to convert to: ").strip().lower()
+    value = float(input(f"Enter the pressure in {unit1}: "))
+
+    if unit1 not in pressure_factors or unit2 not in pressure_factors:
+        invalid()
+        return
+
+    result = convert_distance(value, unit1, unit2)
+    print(f"{value} {unit1} = {result} {unit2}")
