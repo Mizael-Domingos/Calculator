@@ -1,4 +1,6 @@
-from sympy import symbols, sympify, diff, integrate, limit  # type: ignore
+from sympy import symbols, sympify, diff, integrate, limit, lambdify  # type: ignore
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def invalid():
@@ -86,33 +88,113 @@ def calculus_calculator():
 def derivative_calc(expression, variable):
     expression = expression.replace("^", "**")
     x = symbols(variable)
-    expr = sympify(expression)
+
+    try:
+        expr = sympify(expression)
+    except Exception as e:
+        print("Invalid mathematical expression:", e)
+        return
 
     derivative = diff(expr, x)
 
     print("Derivative: ", derivative)
 
-    answer = input("Do you want to evaluate at a specific point? (y/n) ").lower()
-    if answer == "y":
-        value = float(input("Enter the value of the variable: "))
-        numeric_result = derivative.subs(x, value)
-        print("Result at x =", value, "is", numeric_result)
+    while True:
+        answer = input("Do you want to evaluate at a specific point? (y/n) ").lower()
+        if answer == "y":
+            value = float(input("Enter the value of the variable: "))
+            numeric_result = derivative.subs(x, value)
+            print("Result at x =", value, "is", numeric_result)
+            break
+        elif answer == "n":
+            break
+        else:
+            invalid()
+
+    x_vals = np.linspace(-10, 10, 400)
+
+    f = lambdify(x, expr, "numpy")
+    df = lambdify(x, derivative, "numpy")
+
+    plt.plot(x_vals, f(x_vals), label="f(x)")
+
+    plt.plot(x_vals, df(x_vals), label="f'(x)", linestyle="--")
+    plt.legend()
+    plt.title("Function and its Derivative")
+    plt.xlabel(variable)
+    plt.ylabel("Value")
+    plt.grid(True)
+    plt.show()
 
 
 def integral_calc(expression, variable):
     expression = expression.replace("^", "**")
     x = symbols(variable)
-    expr = sympify(expression)
 
-    answer = input("Do you want a definite integral? (y/n) ").lower()
-    if answer == "y":
-        lower = float(input("Enter lower limit: "))
-        upper = float(input("Enter upper limit: "))
-        result = integrate(expr, (x, lower, upper))
-    else:
-        result = integrate(expr, x)
+    try:
+        expr = sympify(expression)
+    except Exception as e:
+        print("Invalid mathematical expression:", e)
+        return
+
+    while True:
+        answer = input("Do you want a definite integral? (y/n) ").lower()
+        if answer == "y":
+            lower = float(input("Enter lower limit: "))
+            upper = float(input("Enter upper limit: "))
+            result = integrate(expr, (x, lower, upper))
+            print(f"Definite integral from {lower} to {upper}: {result}")
+
+            x_vals = np.linspace(lower - 2, upper + 2, 400)
+            f = lambdify(x, expr, "numpy")
+
+            plt.plot(x_vals, f(x_vals), label="f(x)", color="blue")
+            plt.fill_between(
+                x_vals,
+                f(x_vals),
+                where=(x_vals >= lower) & (x_vals <= upper),
+                color="lightblue",
+                alpha=0.4,
+                label="Area under curve",
+            )
+            plt.title(f"Definite Integral from {lower} to {upper}")
+            plt.xlabel(variable)
+            plt.ylabel("f(x)")
+            plt.legend()
+            plt.grid(True)
+            plt.show()
+            return
+        elif answer == "n":
+            result = integrate(expr, x)
+            break
+        else:
+            invalid()
 
     print("Integral:", result)
+
+    x_vals = np.linspace(-10, 10, 400)
+
+    f = lambdify(x, expr, "numpy")
+    f_integral = lambdify(x, result, "numpy")
+
+    plt.plot(x_vals, f(x_vals), label="f(x)")
+    plt.plot(x_vals, f_integral(x_vals), label="∫f(x)dx", linestyle="--")
+
+    plt.fill_between(
+        x_vals,
+        f(x_vals),
+        where=(x_vals > -5) & (x_vals < 5),
+        color="lightblue",
+        alpha=0.3,
+        label="Example area",
+    )
+
+    plt.title("Function and Its Integral")
+    plt.xlabel(variable)
+    plt.ylabel("Value")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 
 def limit_calc(expression, variable):
