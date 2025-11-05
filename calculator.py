@@ -63,6 +63,8 @@ def arithmetic_calculator(num_1):
         else:
             invalid()
 
+    return result
+
 
 def calculus_calculator():
     print("Choose operation: 1- Derivative, 2- Integral, 3- Limit")
@@ -125,6 +127,8 @@ def derivative_calc(expression, variable):
     plt.ylabel("Value")
     plt.grid(True)
     plt.show()
+
+    return derivative, f, df
 
 
 def integral_calc(expression, variable):
@@ -196,6 +200,8 @@ def integral_calc(expression, variable):
     plt.grid(True)
     plt.show()
 
+    return integrate, f, f_integral
+
 
 def limit_calc(expression, variable):
     expression = expression.replace("^", "**")
@@ -221,6 +227,7 @@ def limit_calc(expression, variable):
             invalid()
 
     print("Limit result: ", result)
+    return result
 
 
 def converter_calculator():
