@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Symbolic Calculator</title>
+</head>
+
+<body>
+    <h1>Symbolic Calculator</h1>
+
+    <form method="POST">
+        <label>Expression:</label>
+        <input type="text" name="expression" required placeholder="e.g. x^2 + 3*x"><br><br>
+
+        <label>Variable:</label>
+        <input type="text" name="variable" value="x"><br><br>
+
+        <label>Operation:</label>
+        <select name="operation">
+            <option value="derivative">Derivative</option>
+            <option value="integral">Integral</option>
+        </select><br><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    {% if result %}
+    <h2>Result: {{ result }}</h2>
+    {% endif %}
+</body>
+
+</html>
