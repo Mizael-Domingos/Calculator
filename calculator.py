@@ -101,32 +101,32 @@ def derivative_calc(expression, variable):
 
     print("Derivative: ", derivative)
 
-    while True:
-        answer = input("Do you want to evaluate at a specific point? (y/n) ").lower()
-        if answer == "y":
-            value = float(input("Enter the value of the variable: "))
-            numeric_result = derivative.subs(x, value)
-            print("Result at x =", value, "is", numeric_result)
-            break
-        elif answer == "n":
-            break
-        else:
-            invalid()
+    # while True:
+    #     answer = input("Do you want to evaluate at a specific point? (y/n) ").lower()
+    #     if answer == "y":
+    #         value = float(input("Enter the value of the variable: "))
+    #         numeric_result = derivative.subs(x, value)
+    #         print("Result at x =", value, "is", numeric_result)
+    #         break
+    #     elif answer == "n":
+    #         break
+    #     else:
+    #         invalid()
 
-    x_vals = np.linspace(-10, 10, 400)
+    # x_vals = np.linspace(-10, 10, 400)
 
     f = lambdify(x, expr, "numpy")
     df = lambdify(x, derivative, "numpy")
 
-    plt.plot(x_vals, f(x_vals), label="f(x)")
+    # plt.plot(x_vals, f(x_vals), label="f(x)")
 
-    plt.plot(x_vals, df(x_vals), label="f'(x)", linestyle="--")
-    plt.legend()
-    plt.title("Function and its Derivative")
-    plt.xlabel(variable)
-    plt.ylabel("Value")
-    plt.grid(True)
-    plt.show()
+    # plt.plot(x_vals, df(x_vals), label="f'(x)", linestyle="--")
+    # plt.legend()
+    # plt.title("Function and its Derivative")
+    # plt.xlabel(variable)
+    # plt.ylabel("Value")
+    # plt.grid(True)
+    # plt.show()
 
     return derivative, f, df
 
