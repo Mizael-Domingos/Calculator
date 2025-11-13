@@ -39,7 +39,7 @@ def get_number(prompt, default=None):
         return None
 
 
-def arithmetic_calculator(num_1):
+def arithimetic_calculator(num_1):
     num1 = get_number("Enter first number: ", num_1)
     if num1 is None:
         return
